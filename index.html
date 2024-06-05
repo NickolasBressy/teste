@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard</title>
+  <title>Painel - Grêmio Estudantil</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
@@ -40,6 +40,9 @@
     .card-category {
       cursor: pointer;
     }
+    #welcome-content {
+      text-align: center;
+    }
   </style>
 </head>
 <body>
@@ -63,32 +66,45 @@
 </div>
 
 <div id="dashboard" style="display: none;">
-  <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
-    <a class="navbar-brand" href="#">Dashboard</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav">
-        <li class="nav-item active">
-          <a class="nav-link" href="#" id="profile-link">Perfil</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#" id="documents-link">Documentos</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#" id="notices-link">Avisos Importantes</a>
-        </li>
-      </ul>
-    </div>
-  </nav>
-
   <div class="sidebar">
-    <h4 class="text-center">Menu</h4>
+    <h4 class="text-center">Grêmio Estudantil</h4>
+    <a href="#" id="home-link">Início</a>
     <a href="#" id="category-link">Categorias</a>
+    <a href="#" id="documents-link">Documentos</a>
+    <a href="#" id="notices-link">Avisos Importantes</a>
+    <a href="#" id="profile-link">Perfil</a>
   </div>
 
   <div class="content">
+    <div id="welcome" style="display: none;">
+      <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+        <ol class="carousel-indicators">
+          <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+          <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+          <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+        </ol>
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <img class="d-block w-100" src="https://images.unsplash.com/photo-1516321497487-e288fb19713f?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8Z3IlQzMlQUFtaW8lMjBlc3R1ZGFudGlsfGVufDB8fDB8fHww" alt="Primeiro slide">
+          </div>
+          <div class="carousel-item">
+            <img class="d-block w-100" src="https://i.pinimg.com/736x/53/26/4a/53264af5670872103b5302892db982a6.jpg" alt="Segundo slide">
+          </div>
+        </div>
+        <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="sr-only">Anterior</span>
+        </a>
+        <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="sr-only">Próximo</span>
+        </a>
+      </div>
+      <div id="welcome-content" class="mt-4">
+        <h2>Bem-vindo ao Painel do Grêmio Estudantil</h2>
+        <p>O Grêmio Estudantil é uma organização estudantil que visa representar os interesses dos alunos e promover atividades que integrem a comunidade escolar. Nossa missão é fortalecer a participação dos estudantes na vida escolar, fomentar a cidadania e a responsabilidade social.</p>
+      </div>
+    </div>
     <div id="profile" style="display: none;">
       <h2>Perfil do Usuário</h2>
       <div id="profile-content"></div>
@@ -125,12 +141,17 @@
           document.getElementById('login-form').reset();
           document.getElementById('login-container').style.display = 'none';
           document.getElementById('dashboard').style.display = 'block';
+          showSection('welcome');
           displayProfile();
         } else {
           document.getElementById('login-message').innerHTML = '<div class="alert alert-danger" role="alert">Email ou senha incorretos.</div>';
         }
       })
       .catch(error => console.error('Erro ao carregar usuários:', error));
+  });
+
+  document.getElementById('home-link').addEventListener('click', function() {
+    showSection('welcome');
   });
 
   document.getElementById('profile-link').addEventListener('click', function() {
@@ -154,6 +175,7 @@
   });
 
   function showSection(sectionId) {
+    document.getElementById('welcome').style.display = 'none';
     document.getElementById('profile').style.display = 'none';
     document.getElementById('documents').style.display = 'none';
     document.getElementById('notices').style.display = 'none';
