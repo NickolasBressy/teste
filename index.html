@@ -76,7 +76,7 @@
     var email = document.getElementById('email').value;
     var password = document.getElementById('password').value;
 
-    fetch('https://raw.githubusercontent.com/NickolasBressy/users.json/main/users.json?token=GHSAT0AAAAAACTG2J2PKWLKHP7YC4T3OZ7QZS72M6A')
+    fetch('users.json')
       .then(response => response.json())
       .then(users => {
         let userFound = users.find(user => user.email === email && user.password === password);
