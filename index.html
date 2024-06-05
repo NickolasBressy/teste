@@ -54,28 +54,31 @@
   document.getElementById('documents-link').addEventListener('click', function() {
     document.getElementById('documents').style.display = 'block';
     document.getElementById('notices').style.display = 'none';
-    fetchData('documents');
+    fetchData('Documentos');
   });
 
   document.getElementById('notices-link').addEventListener('click', function() {
     document.getElementById('documents').style.display = 'none';
     document.getElementById('notices').style.display = 'block';
-    fetchData('notices');
+    fetchData('Avisos');
   });
 
-  function fetchData(type) {
-    fetch('https://script.google.com/macros/s/AKfycby1oTpF2pYEIJHd-c5108xmyl5mHe4Om-F4yWuxtCD7iaOxAxTJE9lKx_5CLXAKWWMZnA/exec')
+  function fetchData(sheetName) {
+    fetch(`https://script.google.com/macros/s/AKfycbxYBUFPjbefY7SBUz7UVmqLEGsbyj6J4zuI4bRdChjgZ5zqvnwroPCugRaOjihiVJ0XXA/exec?type=${sheetName}`)
       .then(response => response.json())
       .then(data => {
         let content = '';
-        data.forEach(item => {
-          if (type === 'documents') {
+        if (sheetName === 'Documentos') {
+          data.forEach(item => {
             content += `<div class="card mb-3"><div class="card-body"><h5 class="card-title">${item.title}</h5><p class="card-text">${item.description}</p><a href="${item.link}" class="btn btn-primary">Acessar</a></div></div>`;
-          } else if (type === 'notices') {
+          });
+          document.getElementById('documents-content').innerHTML = content;
+        } else if (sheetName === 'Avisos') {
+          data.forEach(item => {
             content += `<div class="alert alert-info"><h5>${item.title}</h5><p>${item.description}</p></div>`;
-          }
-        });
-        document.getElementById(`${type}-content`).innerHTML = content;
+          });
+          document.getElementById('notices-content').innerHTML = content;
+        }
       })
       .catch(error => console.error('Error fetching data:', error));
   }
