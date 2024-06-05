@@ -40,6 +40,11 @@
     .card-category {
       cursor: pointer;
     }
+    .carousel-item img {
+      width: 100%; /* Ajusta a largura das imagens */
+      height: 400px; /* Ajusta a altura das imagens */
+      object-fit: cover; /* Faz com que as imagens se ajustem ao contêiner sem distorção */
+    }
     #welcome-content {
       text-align: center;
     }
@@ -84,9 +89,6 @@
           <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
         </ol>
         <div class="carousel-inner">
-          <div class="carousel-item active">
-            <img class="d-block w-100" src="https://images.unsplash.com/photo-1516321497487-e288fb19713f?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8Z3IlQzMlQUFtaW8lMjBlc3R1ZGFudGlsfGVufDB8fDB8fHww" alt="Primeiro slide">
-          </div>
           <div class="carousel-item">
             <img class="d-block w-100" src="https://i.pinimg.com/736x/53/26/4a/53264af5670872103b5302892db982a6.jpg" alt="Segundo slide">
           </div>
