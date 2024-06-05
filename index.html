@@ -17,10 +17,10 @@
       <h2 class="mb-4">Login</h2>
       <form id="login-form">
         <div class="form-group">
-          <input type="email" class="form-control" id="email" placeholder="Email">
+          <input type="email" class="form-control" id="email" placeholder="Email" required>
         </div>
         <div class="form-group">
-          <input type="password" class="form-control" id="password" placeholder="Senha">
+          <input type="password" class="form-control" id="password" placeholder="Senha" required>
         </div>
         <button type="submit" class="btn btn-primary btn-block">Entrar</button>
       </form>
@@ -32,13 +32,13 @@
 <div class="container mt-5" id="dashboard" style="display: none;">
   <div class="row">
     <div class="col-md-6">
-      <div id="documents" style="display: none;">
+      <div id="documents">
         <h2>Documentos</h2>
         <div id="documents-content"></div>
       </div>
     </div>
     <div class="col-md-6">
-      <div id="notices" style="display: none;">
+      <div id="notices">
         <h2>Avisos Importantes</h2>
         <div id="notices-content"></div>
       </div>
@@ -51,11 +51,12 @@
     event.preventDefault();
     var email = document.getElementById('email').value;
     var password = document.getElementById('password').value;
-    
-    fetch(`https://script.google.com/macros/s/AKfycbxYBUFPjbefY7SBUz7UVmqLEGsbyj6J4zuI4bRdChjgZ5zqvnwroPCugRaOjihiVJ0XXA/exec?type=login&email=${email}&password=${password}`)
-      .then(response => response.text())
-      .then(data => {
-        if (data === 'success') {
+
+    fetch('users.json')
+      .then(response => response.json())
+      .then(users => {
+        let userFound = users.find(user => user.email === email && user.password === password);
+        if (userFound) {
           document.getElementById('login-message').innerHTML = '';
           document.getElementById('login-form').reset();
           document.getElementById('login-container').style.display = 'none';
@@ -65,11 +66,11 @@
           document.getElementById('login-message').innerHTML = '<div class="alert alert-danger" role="alert">Email ou senha incorretos.</div>';
         }
       })
-      .catch(error => console.error('Erro ao fazer login:', error));
+      .catch(error => console.error('Erro ao carregar usuários:', error));
   });
-  
+
   function fetchData() {
-    fetch('https://script.google.com/macros/s/AKfycbxYBUFPjbefY7SBUz7UVmqLEGsbyj6J4zuI4bRdChjgZ5zqvnwroPCugRaOjihiVJ0XXA/exec?type=Documentos')
+    fetch('https://your-script-url?type=Documentos')
       .then(response => response.json())
       .then(data => {
         let content = '';
@@ -77,11 +78,10 @@
           content += `<div class="card mb-3"><div class="card-body"><h5 class="card-title">${item.title}</h5><p class="card-text">${item.description}</p><a href="${item.link}" class="btn btn-primary">Acessar</a></div></div>`;
         });
         document.getElementById('documents-content').innerHTML = content;
-        document.getElementById('documents').style.display = 'block';
       })
       .catch(error => console.error('Erro ao buscar documentos:', error));
 
-    fetch('https://script.google.com/macros/s/AKfycbxYBUFPjbefY7SBUz7UVmqLEGsbyj6J4zuI4bRdChjgZ5zqvnwroPCugRaOjihiVJ0XXA/exec?type=Avisos')
+    fetch('https://your-script-url?type=Avisos')
       .then(response => response.json())
       .then(data => {
         let content = '';
@@ -89,7 +89,6 @@
           content += `<div class="alert alert-info"><h5>${item.title}</h5><p>${item.description}</p></div>`;
         });
         document.getElementById('notices-content').innerHTML = content;
-        document.getElementById('notices').style.display = 'block';
       })
       .catch(error => console.error('Erro ao buscar avisos:', error));
   }
