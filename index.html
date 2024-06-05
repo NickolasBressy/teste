@@ -54,11 +54,16 @@
 <div id="dashboard" style="display: none;">
   <div class="sidebar">
     <h4 class="text-center">Menu</h4>
+    <a href="#" id="profile-link">Perfil</a>
     <a href="#" id="documents-link">Documentos</a>
     <a href="#" id="notices-link">Avisos Importantes</a>
   </div>
 
   <div class="content">
+    <div id="profile" style="display: none;">
+      <h2>Perfil do Usuário</h2>
+      <div id="profile-content"></div>
+    </div>
     <div id="documents" style="display: none;">
       <h2>Documentos</h2>
       <div id="documents-content"></div>
@@ -71,6 +76,8 @@
 </div>
 
 <script>
+  let currentUser = null;
+
   document.getElementById('login-form').addEventListener('submit', function(event) {
     event.preventDefault();
     var email = document.getElementById('email').value;
@@ -79,12 +86,13 @@
     fetch('users.json')
       .then(response => response.json())
       .then(users => {
-        let userFound = users.find(user => user.email === email && user.password === password);
-        if (userFound) {
+        currentUser = users.find(user => user.email === email && user.password === password);
+        if (currentUser) {
           document.getElementById('login-message').innerHTML = '';
           document.getElementById('login-form').reset();
           document.getElementById('login-container').style.display = 'none';
           document.getElementById('dashboard').style.display = 'block';
+          displayProfile();
         } else {
           document.getElementById('login-message').innerHTML = '<div class="alert alert-danger" role="alert">Email ou senha incorretos.</div>';
         }
@@ -92,17 +100,42 @@
       .catch(error => console.error('Erro ao carregar usuários:', error));
   });
 
+  document.getElementById('profile-link').addEventListener('click', function() {
+    document.getElementById('profile').style.display = 'block';
+    document.getElementById('documents').style.display = 'none';
+    document.getElementById('notices').style.display = 'none';
+    displayProfile();
+  });
+
   document.getElementById('documents-link').addEventListener('click', function() {
+    document.getElementById('profile').style.display = 'none';
     document.getElementById('documents').style.display = 'block';
     document.getElementById('notices').style.display = 'none';
     fetchData('Documentos');
   });
 
   document.getElementById('notices-link').addEventListener('click', function() {
+    document.getElementById('profile').style.display = 'none';
     document.getElementById('documents').style.display = 'none';
     document.getElementById('notices').style.display = 'block';
     fetchData('Avisos');
   });
+
+  function displayProfile() {
+    if (currentUser) {
+      let content = `
+        <div class="card" style="width: 18rem;">
+          <img src="${currentUser.photo}" class="card-img-top" alt="Foto do Usuário">
+          <div class="card-body">
+            <h5 class="card-title">${currentUser.name}</h5>
+            <p class="card-text"><strong>Email:</strong> ${currentUser.email}</p>
+            <p class="card-text"><strong>Cargo:</strong> ${currentUser.jobTitle}</p>
+            <p class="card-text"><strong>Função:</strong> ${currentUser.role}</p>
+          </div>
+        </div>`;
+      document.getElementById('profile-content').innerHTML = content;
+    }
+  }
 
   function fetchData(sheetName) {
     fetch(`https://script.google.com/macros/s/AKfycbxYBUFPjbefY7SBUz7UVmqLEGsbyj6J4zuI4bRdChjgZ5zqvnwroPCugRaOjihiVJ0XXA/exec?type=${sheetName}`)
