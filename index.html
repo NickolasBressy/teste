@@ -5,7 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <style>
+    body {
+      padding-top: 56px;
+    }
     .sidebar {
       height: 100vh;
       position: fixed;
@@ -28,6 +33,12 @@
     .content {
       margin-left: 250px;
       padding: 20px;
+    }
+    .container {
+      max-width: 900px;
+    }
+    .card-category {
+      cursor: pointer;
     }
   </style>
 </head>
@@ -52,11 +63,29 @@
 </div>
 
 <div id="dashboard" style="display: none;">
+  <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+    <a class="navbar-brand" href="#">Dashboard</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item active">
+          <a class="nav-link" href="#" id="profile-link">Perfil</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#" id="documents-link">Documentos</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#" id="notices-link">Avisos Importantes</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
   <div class="sidebar">
     <h4 class="text-center">Menu</h4>
-    <a href="#" id="profile-link">Perfil</a>
-    <a href="#" id="documents-link">Documentos</a>
-    <a href="#" id="notices-link">Avisos Importantes</a>
+    <a href="#" id="category-link">Categorias</a>
   </div>
 
   <div class="content">
@@ -71,6 +100,10 @@
     <div id="notices" style="display: none;">
       <h2>Avisos Importantes</h2>
       <div id="notices-content"></div>
+    </div>
+    <div id="category" style="display: none;">
+      <h1 class="mt-5">Selecione Uma Modalidade</h1>
+      <div id="category-cards" class="row"></div>
     </div>
   </div>
 </div>
@@ -101,25 +134,32 @@
   });
 
   document.getElementById('profile-link').addEventListener('click', function() {
-    document.getElementById('profile').style.display = 'block';
-    document.getElementById('documents').style.display = 'none';
-    document.getElementById('notices').style.display = 'none';
+    showSection('profile');
     displayProfile();
   });
 
   document.getElementById('documents-link').addEventListener('click', function() {
-    document.getElementById('profile').style.display = 'none';
-    document.getElementById('documents').style.display = 'block';
-    document.getElementById('notices').style.display = 'none';
+    showSection('documents');
     fetchData('Documentos');
   });
 
   document.getElementById('notices-link').addEventListener('click', function() {
-    document.getElementById('profile').style.display = 'none';
-    document.getElementById('documents').style.display = 'none';
-    document.getElementById('notices').style.display = 'block';
+    showSection('notices');
     fetchData('Avisos');
   });
+
+  document.getElementById('category-link').addEventListener('click', function() {
+    showSection('category');
+    fetchCategories();
+  });
+
+  function showSection(sectionId) {
+    document.getElementById('profile').style.display = 'none';
+    document.getElementById('documents').style.display = 'none';
+    document.getElementById('notices').style.display = 'none';
+    document.getElementById('category').style.display = 'none';
+    document.getElementById(sectionId).style.display = 'block';
+  }
 
   function displayProfile() {
     if (currentUser) {
@@ -138,7 +178,7 @@
   }
 
   function fetchData(sheetName) {
-    fetch(`https://script.google.com/macros/s/AKfycbxYBUFPjbefY7SBUz7UVmqLEGsbyj6J4zuI4bRdChjgZ5zqvnwroPCugRaOjihiVJ0XXA/exec?type=${sheetName}`)
+    fetch(`https://script.google.com/macros/s/AKfycbwT8x66IIpc5OL_Y8dsr6sqcdPwQeoNWnbSWEFS8cxzeli1zPHqGDjTMJzE-3r84np_fw/exec?type=${sheetName}`)
       .then(response => response.json())
       .then(data => {
         let content = '';
@@ -155,6 +195,36 @@
         }
       })
       .catch(error => console.error('Erro ao buscar dados:', error));
+  }
+
+  function fetchCategories() {
+    const apiUrl = 'https://script.google.com/macros/s/AKfycbxYBUFPjbefY7SBUz7UVmqLEGsbyj6J4zuI4bRdChjgZ5zqvnwroPCugRaOjihiVJ0XXA/exec';
+    
+    $.getJSON(apiUrl, function(data) {
+      if (data.erro) {
+        $('#category-cards').html('<div class="alert alert-danger">' + data.erro + '</div>');
+        return;
+      }
+
+      var content = '';
+      for (var key in data) {
+        var categoryId = key.replace(/\s+/g, '-').toLowerCase();
+        content += '<div class="col-md-4">';
+        content += '<div class="card card-category" data-category="' + key + '">';
+        content += '<div class="card-body">';
+        content += '<h5 class="card-title">' + key + '</h5>';
+        content += '</div>';
+        content += '</div>';
+        content += '</div>';
+      }
+
+      $('#category-cards').html(content);
+
+      $('.card-category').on('click', function() {
+        var category = $(this).data('category');
+        window.location.href = 'categoria.html?categoria=' + encodeURIComponent(category);
+      });
+    });
   }
 </script>
 
