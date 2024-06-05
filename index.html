@@ -33,7 +33,7 @@
 </head>
 <body>
 
-<div class="container mt-5" id="login-container">
+<div id="login-container" class="container mt-5">
   <div class="row justify-content-center">
     <div class="col-md-4">
       <h2 class="mb-4">Login</h2>
@@ -51,19 +51,21 @@
   </div>
 </div>
 
-<div class="container mt-5" id="dashboard" style="display: none;">
-  <div class="row">
-    <div class="col-md-6">
-      <div id="documents">
-        <h2>Documentos</h2>
-        <div id="documents-content"></div>
-      </div>
+<div id="dashboard" style="display: none;">
+  <div class="sidebar">
+    <h4 class="text-center">Menu</h4>
+    <a href="#" id="documents-link">Documentos</a>
+    <a href="#" id="notices-link">Avisos Importantes</a>
+  </div>
+
+  <div class="content">
+    <div id="documents" style="display: none;">
+      <h2>Documentos</h2>
+      <div id="documents-content"></div>
     </div>
-    <div class="col-md-6">
-      <div id="notices">
-        <h2>Avisos Importantes</h2>
-        <div id="notices-content"></div>
-      </div>
+    <div id="notices" style="display: none;">
+      <h2>Avisos Importantes</h2>
+      <div id="notices-content"></div>
     </div>
   </div>
 </div>
@@ -83,7 +85,6 @@
           document.getElementById('login-form').reset();
           document.getElementById('login-container').style.display = 'none';
           document.getElementById('dashboard').style.display = 'block';
-          fetchData();
         } else {
           document.getElementById('login-message').innerHTML = '<div class="alert alert-danger" role="alert">Email ou senha incorretos.</div>';
         }
@@ -91,28 +92,36 @@
       .catch(error => console.error('Erro ao carregar usuários:', error));
   });
 
-  function fetchData() {
-    fetch('https://script.google.com/macros/s/AKfycbxYBUFPjbefY7SBUz7UVmqLEGsbyj6J4zuI4bRdChjgZ5zqvnwroPCugRaOjihiVJ0XXA/exec?type=Documentos')
-      .then(response => response.json())
-      .then(data => {
-        let content = '';
-        data.forEach(item => {
-          content += `<div class="card mb-3"><div class="card-body"><h5 class="card-title">${item.title}</h5><p class="card-text">${item.description}</p><a href="${item.link}" class="btn btn-primary">Acessar</a></div></div>`;
-        });
-        document.getElementById('documents-content').innerHTML = content;
-      })
-      .catch(error => console.error('Erro ao buscar documentos:', error));
+  document.getElementById('documents-link').addEventListener('click', function() {
+    document.getElementById('documents').style.display = 'block';
+    document.getElementById('notices').style.display = 'none';
+    fetchData('Documentos');
+  });
 
-    fetch('https://script.google.com/macros/s/AKfycbxYBUFPjbefY7SBUz7UVmqLEGsbyj6J4zuI4bRdChjgZ5zqvnwroPCugRaOjihiVJ0XXA/exec?type=Avisos')
+  document.getElementById('notices-link').addEventListener('click', function() {
+    document.getElementById('documents').style.display = 'none';
+    document.getElementById('notices').style.display = 'block';
+    fetchData('Avisos');
+  });
+
+  function fetchData(sheetName) {
+    fetch(`https://script.google.com/macros/s/AKfycbxYBUFPjbefY7SBUz7UVmqLEGsbyj6J4zuI4bRdChjgZ5zqvnwroPCugRaOjihiVJ0XXA/exec?type=${sheetName}`)
       .then(response => response.json())
       .then(data => {
         let content = '';
-        data.forEach(item => {
-          content += `<div class="alert alert-info"><h5>${item.title}</h5><p>${item.description}</p></div>`;
-        });
-        document.getElementById('notices-content').innerHTML = content;
+        if (sheetName === 'Documentos') {
+          data.forEach(item => {
+            content += `<div class="card mb-3"><div class="card-body"><h5 class="card-title">${item.title}</h5><p class="card-text">${item.description}</p><a href="${item.link}" class="btn btn-primary">Acessar</a></div></div>`;
+          });
+          document.getElementById('documents-content').innerHTML = content;
+        } else if (sheetName === 'Avisos') {
+          data.forEach(item => {
+            content += `<div class="alert alert-info"><h5>${item.title}</h5><p>${item.description}</p></div>`;
+          });
+          document.getElementById('notices-content').innerHTML = content;
+        }
       })
-      .catch(error => console.error('Erro ao buscar avisos:', error));
+      .catch(error => console.error('Erro ao buscar dados:', error));
   }
 </script>
 
