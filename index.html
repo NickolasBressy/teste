@@ -6,29 +6,7 @@
   <title>Dashboard</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <style>
-    .sidebar {
-      height: 100vh;
-      position: fixed;
-      left: 0;
-      top: 0;
-      width: 250px;
-      background-color: #343a40;
-      color: white;
-      padding-top: 20px;
-    }
-    .sidebar a {
-      color: white;
-      display: block;
-      padding: 10px;
-      text-decoration: none;
-    }
-    .sidebar a:hover {
-      background-color: #575d63;
-    }
-    .content {
-      margin-left: 250px;
-      padding: 20px;
-    }
+    /* Estilos CSS aqui */
   </style>
 </head>
 <body>
@@ -39,7 +17,7 @@
       <h2 class="mb-4">Login</h2>
       <form id="login-form">
         <div class="form-group">
-          <input type="text" class="form-control" id="username" placeholder="Nome de usuário">
+          <input type="email" class="form-control" id="email" placeholder="Email">
         </div>
         <div class="form-group">
           <input type="password" class="form-control" id="password" placeholder="Senha">
@@ -71,10 +49,10 @@
 <script>
   document.getElementById('login-form').addEventListener('submit', function(event) {
     event.preventDefault();
-    var username = document.getElementById('username').value;
+    var email = document.getElementById('email').value;
     var password = document.getElementById('password').value;
     
-    fetch(`https://script.google.com/macros/s/AKfycbxYBUFPjbefY7SBUz7UVmqLEGsbyj6J4zuI4bRdChjgZ5zqvnwroPCugRaOjihiVJ0XXA/exec?type=login&username=${username}&password=${password}`)
+    fetch(`https://script.google.com/macros/s/AKfycbxYBUFPjbefY7SBUz7UVmqLEGsbyj6J4zuI4bRdChjgZ5zqvnwroPCugRaOjihiVJ0XXA/exec?type=login&email=${email}&password=${password}`)
       .then(response => response.text())
       .then(data => {
         if (data === 'success') {
@@ -84,7 +62,7 @@
           document.getElementById('dashboard').style.display = 'block';
           fetchData();
         } else {
-          document.getElementById('login-message').innerHTML = '<div class="alert alert-danger" role="alert">Nome de usuário ou senha incorretos.</div>';
+          document.getElementById('login-message').innerHTML = '<div class="alert alert-danger" role="alert">Email ou senha incorretos.</div>';
         }
       })
       .catch(error => console.error('Erro ao fazer login:', error));
