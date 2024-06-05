@@ -1,10 +1,18 @@
 [
   {
-    "email": "user1@gremio.com",
-    "password": "password1"
+    "email": "anthonygodeiro@gmail.com",
+    "password": "Anthonygodeiro1",
+    "name": "Anthony Godeiro",
+    "role": "Representar o Grêmio na escola e fora dela",
+    "jobTitle": "Presidente",
+    "photo": "https://via.placeholder.com/150"
   },
   {
-    "email": "user2@diretoria.com",
-    "password": "password2"
+    "email": "bressynickolas2007@gmail.com",
+    "password": "bressy124.",
+    "name": "Nickolas Bressy",
+    "role": "organizar festas promovidas pelo grêmio ; selar pelo bom relacionamento do grêmio com os estudantes , com o colégio e com a comunidade .",
+    "jobTitle": "Diretor Social",
+    "photo": "https://via.placeholder.com/150"
   }
 ]
