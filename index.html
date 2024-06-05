@@ -178,7 +178,7 @@
   }
 
   function fetchData(sheetName) {
-    fetch(`https://script.google.com/macros/s/AKfycbwT8x66IIpc5OL_Y8dsr6sqcdPwQeoNWnbSWEFS8cxzeli1zPHqGDjTMJzE-3r84np_fw/exec?type=${sheetName}`)
+    fetch(`https://script.google.com/macros/s/AKfycbxYBUFPjbefY7SBUz7UVmqLEGsbyj6J4zuI4bRdChjgZ5zqvnwroPCugRaOjihiVJ0XXA/exec?type=${sheetName}`)
       .then(response => response.json())
       .then(data => {
         let content = '';
